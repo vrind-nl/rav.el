@@ -1,0 +1,49 @@
+#+TITLE: rav.el
+#+DATE: 2021-07-13
+
+=rav.el=, pronounced //ˈrav(ə)l//, generates a hash, based on user inputs, which can be used as a unique password.
+
+* Why
+
+You know that you should use strong passwords, at least 10 characters long, with numbers, letters (upper and lower case) and symbols. You also know that you should use a unique passwords for every account. You also know that you won't.
+
+It's just is too much hassle. You can't remember jiberish. Especially not for the gazillion accounts that you use regularly. And the accounts that you use only occasionally are even worse. You're guaranteed to forget those.
+
+This small Emacs package is meant to remedy this. It generates a unique hash for every combination of strings you provide. These strings could be the site name, your account name and your master password, or any combination you like.
+
+* Usage
+
+Call =rav-hash= to generate a hash based on user input. You could bind this, for example, to =C-c p= with =(define-key mode-specific-map "p" 'rav-hash)=.
+
+=rav.el= will ask for your inputs in the mini-buffer and generate a hash from it. For example:
+#+begin_example
+Value (RET to end): *********<RET>
+Value (RET to end): ********<RET>
+Value (RET to end): <RET>
+Result t4UYG11bIqcw49BP is in kill-ring
+#+end_example
+The resulting hash is added to the kill ring, so you can yank/paste it anywhere you like.
+
+Customize =rav-length= to determine the length of the resulting hash (default is 16).
+
+* Installation
+
+=rav.el= is not on MELPA yet. You can install it by cloning this repo (or downloading the =rav.el= file) and =require= it.
+
+I use [[https://jwiegley.github.io/use-package/keywords/][use-package]] package configuration with [[https://github.com/raxod502/straight.el][straight]] package manager and install =rav.el= with:
+
+#+begin_src emacs-lisp
+  (use-package rav
+    :straight (rav
+               :type git
+               :host github
+               :repo "vrind-nl/rav.el"
+               :branch "master"
+               :files ("rav.el"))
+    :config
+    (define-key mode-specific-map "p" 'rav-hash))
+#+end_src
+
+* Considerations
+
+This could be simpler, but I needed something to replace =b64_md5= from [[http://pajhome.org.uk/crypt/md5/][JavaScript MD5]], which I have been using up to now.
